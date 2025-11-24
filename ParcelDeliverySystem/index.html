@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Parcel Delivery System</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <h1>Parcel Delivery System</h1>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="insert_parcel.php">Create Order</a>
+        <a href="view_parcels.php">View Parcels</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <!-- Replace images/hero.jpg with an image you download from Pinterest (see README) -->
+      <img src="images/hero.jpg" alt="parcels hero image" class="hero-img">
+      <div class="hero-text">
+        <h2>Fast. Reliable. Trackable.</h2>
+        <p>Manage parcel pickups, assignments, and deliveries from a single dashboard.</p>
+        <a class="btn" href="view_parcels.php">View Parcels</a>
+      </div>
+    </section>
+
+    <section class="features container">
+      <article class="feature">
+        <img src="images/feature1.jpg" alt="feature 1">
+        <h3>Real-time Tracking</h3>
+        <p>See parcel status updates and tracking history.</p>
+      </article>
+      <article class="feature">
+        <img src="images/feature2.jpg" alt="feature 2">
+        <h3>Easy Dispatch</h3>
+        <p>Assign parcels to delivery personnel with one click.</p>
+      </article>
+      <article class="feature">
+        <img src="images/feature3.jpg" alt="feature 3">
+        <h3>Reports</h3>
+        <p>View delivery performance and generate reports.</p>
+      </article>
+    </section>
+
+    <section class="parcels container">
+      <h2>Recent parcels</h2>
+      <ul id="parcel-list" class="parcel-list"></ul>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">Parcel Delivery System — Demo project</div>
+  </footer>
+
+  <script>
+  // fetch parcels from the PHP API
+  fetch('get_parcels.php')
+    .then(r => r.json())
+    .then(data => {
+      const ul = document.getElementById('parcel-list');
+      if(!data || data.length === 0) {
+        ul.innerHTML = '<li>No parcels found. Insert sample data in Workbench or run the insert SQL.</li>';
+        return;
+      }
+      data.forEach(p => {
+        const li = document.createElement('li');
+        li.innerHTML = '<strong>' + p.tracking_number + '</strong> — ' + 
+                       p.recipient_name + ' (' + p.delivery_status + ') <span class="sender">from: ' + p.sender + '</span>';
+        ul.appendChild(li);
+      });
+    })
+    .catch(err => {
+      console.error(err);
+      const ul = document.getElementById('parcel-list');
+      ul.innerHTML = '<li>Error loading parcels. Be sure XAMPP is running and db.php is configured.</li>';
+    });
+  </script>
+</body>
+</html>
